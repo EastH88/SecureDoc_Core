@@ -34,8 +34,11 @@ class Settings(BaseSettings):
     CHUNK_OVERLAP: int = 50
 
     # 검색 설정
-    TOP_K: int = 5
+    TOP_K: int = 5                  # 최종 LLM에 넘길 청크 수
+    TOP_K_RETRIEVE: int = 25        # Reranker에 넘길 후보 수 (Hybrid 단계 출력)
     RRF_K: int = 60
+    RERANK_ENABLED: bool = True
+    RERANK_MODEL: str = "BAAI/bge-reranker-v2-m3"
     FAITHFULNESS_THRESHOLD: float = 0.7
     MAX_RETRIES: int = 2
 

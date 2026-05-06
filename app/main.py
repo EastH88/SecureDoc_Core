@@ -61,13 +61,15 @@ async def lifespan(app: FastAPI):
     vector_store = VectorStore()
     bm25_store = BM25Store()
 
-    # 3. 검색기
+    # 3. 검색기 (Dense + Sparse + RRF + Reranker)
     from app.retrieval.dense import DenseRetriever
     from app.retrieval.sparse import SparseRetriever
+    from app.retrieval.reranker import Reranker
     from app.retrieval.hybrid import HybridRetriever
     dense = DenseRetriever(vector_store, embedder)
     sparse = SparseRetriever(bm25_store, embedder)
-    hybrid = HybridRetriever(dense, sparse, vector_store)
+    reranker = Reranker()
+    hybrid = HybridRetriever(dense, sparse, vector_store, reranker=reranker)
 
     # 4. LLM / VLM 클라이언트
     from app.llm.client import LLMClient
