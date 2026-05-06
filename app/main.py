@@ -2,10 +2,16 @@
 
 import json
 import logging
+import sys
 import uuid
 from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
+
+# `python app/main.py` 또는 `python main.py`로 직접 실행해도 `app` 패키지를 찾도록 프로젝트 루트를 sys.path에 추가
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(_PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(_PROJECT_ROOT))
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -219,3 +225,14 @@ async def list_documents():
 @app.get("/health")
 async def health():
     return {"status": "ok", "service": "SecureDoc Core"}
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(
+        "app.main:app",
+        host=settings.API_HOST,
+        port=settings.API_PORT,
+        reload=False,
+    )
