@@ -3,15 +3,15 @@
 import streamlit as st
 import requests
 
-API_BASE = st.sidebar.text_input("API 서버 주소", value="http://localhost:8000")
-
-# ── 페이지 설정 ──────────────────────────────────────────────
+# ── 페이지 설정 ── (반드시 첫 Streamlit 명령으로 호출되어야 함)
 st.set_page_config(
     page_title="SecureDoc Core",
     page_icon="📄",
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+API_BASE = st.sidebar.text_input("API 서버 주소", value="http://localhost:8000")
 
 # ── 커스텀 CSS ───────────────────────────────────────────────
 st.markdown("""
