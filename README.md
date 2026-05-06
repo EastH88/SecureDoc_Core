@@ -154,7 +154,35 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 streamlit run ui/app.py --server.port 8501
 ```
 
-### VLM/LLM 서버 개별 실행 (vLLM)
+### Mac 로컬 개발 — Ollama (CUDA GPU가 없을 때)
+
+vLLM은 CUDA가 필수라 Mac에선 실행이 안 됩니다. 대신 OpenAI 호환 엔드포인트를
+제공하는 **Ollama**로 LLM/VLM을 모두 대체할 수 있습니다.
+
+```bash
+# 1) 설치 + 데몬 기동
+brew install ollama
+brew services start ollama
+
+# 2) 모델 다운로드 (LLM ~4.7GB, VLM ~4.1GB)
+ollama pull qwen2.5:7b      # LLM
+ollama pull llava:7b        # VLM (이미지 캡셔닝)
+
+# 3) .env 작성 — Ollama는 11434 포트의 /v1에서 OpenAI 호환 API 제공
+cat > .env <<'EOF'
+LLM_HOST=localhost
+LLM_PORT=11434
+LLM_MODEL=qwen2.5:7b
+VLM_HOST=localhost
+VLM_PORT=11434
+VLM_MODEL=llava:7b
+EOF
+
+# 4) 실행
+python run.py
+```
+
+### VLM/LLM 서버 개별 실행 (vLLM, GPU 서버용)
 
 ```bash
 # GPU 0: VLM (이미지 캡셔닝)
