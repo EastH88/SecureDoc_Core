@@ -136,12 +136,21 @@ pip install -r requirements.txt
 cp .env.example .env
 # .env 파일 수정 (VLM_HOST, LLM_HOST, Langfuse 키 등)
 
-# 4. FastAPI 서버 실행
-python app/main.py
+# 4. FastAPI + Streamlit UI 동시 실행 (권장)
+python run.py
+# → http://localhost:8000 (API)  +  http://localhost:8501 (UI)
+# Ctrl+C 한 번에 두 프로세스가 함께 종료됩니다.
+```
+
+#### 개별 실행이 필요할 때 (선택)
+
+```bash
+# FastAPI만
+python -m app.main
 # 또는
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 
-# 5. Streamlit UI 실행 (별도 터미널)
+# Streamlit UI만 (별도 터미널)
 streamlit run ui/app.py --server.port 8501
 ```
 
