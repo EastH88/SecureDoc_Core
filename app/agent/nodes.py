@@ -152,11 +152,14 @@ def verify_answer(state: AgentState) -> AgentState:
 
 
 def should_retry(state: AgentState) -> str:
-    """검증 실패 시 재시도 여부 결정"""
+    """검증 실패 시 재시도 여부 결정 (score=-1.0은 검증 미수행이므로 retry하지 않음)"""
     from app.config import settings
 
     score = state.get("faithfulness_score", 0.0)
     retry_count = state.get("retry_count", 0)
+
+    if score < 0:  # 검증 미수행 (파싱 실패) → 답변은 살리고 종료
+        return "done"
 
     if score < settings.FAITHFULNESS_THRESHOLD and retry_count < settings.MAX_RETRIES:
         logger.info("재검색 루프 진입 (score=%.2f < %.2f)", score, settings.FAITHFULNESS_THRESHOLD)

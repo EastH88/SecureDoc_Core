@@ -187,16 +187,23 @@ if question := st.chat_input("PDF 문서에 대해 질문하세요..."):
                     # 답변 표시
                     st.markdown(answer)
 
-                    # 메타 정보
-                    score_class = "score-high" if score >= 0.7 else ("score-mid" if score >= 0.4 else "score-low")
+                    # 메타 정보 (score < 0이면 검증 미수행)
                     type_labels = {"simple": "단순 질문", "multi_hop": "복합 질문", "visual": "시각 질문"}
+                    if score < 0:
+                        score_html = '<span class="score-badge score-low">신뢰도: 검증 미수행</span>'
+                    else:
+                        score_class = "score-high" if score >= 0.7 else ("score-mid" if score >= 0.4 else "score-low")
+                        score_html = (
+                            f'<span class="score-badge {score_class}">'
+                            f"신뢰도: {score:.0%}</span>"
+                        )
                     meta_html = (
                         f'<span class="type-badge">{type_labels.get(qtype, qtype)}</span> '
-                        f'<span class="score-badge {score_class}">'
-                        f"신뢰도: {score:.0%}</span>"
+                        f"{score_html}"
                     )
                     st.markdown(meta_html, unsafe_allow_html=True)
-                    st.progress(min(score, 1.0))
+                    if score >= 0:
+                        st.progress(min(score, 1.0))
 
                     # Citation 표시
                     extra_html = ""
